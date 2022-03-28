@@ -63,11 +63,11 @@ variable "node_count" {
 
 variable "bucket_name" {
   type    = list(any)
-  default = ["randombucketname0", "randombucketname1","randombucketname2"]
+  default = ["randombucketname0", "randombucketname1", "randombucketname2"]
 }
 
 variable "bucket_location" {
-    type = string
+  type = string
 }
 
 variable "bucket_class" {
@@ -81,5 +81,5 @@ variable "dataset_id" {
 }
 
 variable "dataset_location" {
-    type = string
+  type = string
 }

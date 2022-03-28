@@ -28,12 +28,10 @@ resource "google_service_account" "gcr_sa" {
   account_id   = "service-account-id1"
   display_name = "Service Account"
 }
-resource "google_project_iam_binding" "gcr_binding" {
+resource "google_project_iam_member" "cluster_policy" {
   role    = "roles/storage.objectViewer"
   project = "onboardingproject1"
-  members = [
-    "serviceAccount:${google_service_account.gcr_sa.email}"
-  ]
+  member  = "serviceAccount:${google_service_account.gcr_sa.email}"
 }
 
 resource "google_container_node_pool" "primary_node_pool" {

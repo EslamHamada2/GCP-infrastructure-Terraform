@@ -3,33 +3,50 @@ resource "google_service_account" "instance_sa" {
   display_name = "Service Account2"
 }
 
-resource "google_project_iam_binding" "container_admin" {
-  project = "onboardingproject1"
-  role    = "roles/container.admin"
-  depends_on = [
-    google_service_account.instance_sa
-  ]
-  members = [
-    "serviceAccount:${google_service_account.instance_sa.email}"
-  ]
+resource "google_project_iam_member" "instance_policy" {
+   project = "onboardingproject1"
+   for_each = toset([ 
+     "roles/container.admin", 
+     "roles/storage.objectAdmin",
+     "roles/bigquery.dataEditor",
+   ])
+   member   = "serviceAccount:${google_service_account.instance_sa.email}"
+   role     = each.key
 }
 
+# resource "google_project_iam_binding" "container_admin" {
+#   project = "onboardingproject1"
+#   role    = "roles/container.admin"
+#   depends_on = [
+#     google_service_account.instance_sa
+#   ]
+#   members = [
+#     "serviceAccount:${google_service_account.instance_sa.email}"
+#   ]
+# }
 
-resource "google_project_iam_binding" "buckets_binding" {
-  role    = "roles/storage.objectAdmin"
-  project = "onboardingproject1"
-  members = [
-    "serviceAccount:${google_service_account.instance_sa.email}"
-  ]
-}
 
-resource "google_project_iam_binding" "bigquery_binding" {
-  role    = "roles/bigquery.dataEditor"
-  project = "onboardingproject1"
-  members = [
-    "serviceAccount:${google_service_account.instance_sa.email}"
-  ]
-}
+# resource "google_project_iam_binding" "buckets_binding" {
+#   role    = "roles/storage.objectAdmin"
+#   project = "onboardingproject1"
+#   depends_on = [
+#     google_service_account.instance_sa
+#   ]
+#   members = [
+#     "serviceAccount:${google_service_account.instance_sa.email}"
+#   ]
+# }
+
+# resource "google_project_iam_binding" "bigquery_binding" {
+#   role    = "roles/bigquery.dataEditor"
+#   project = "onboardingproject1"
+#   depends_on = [
+#     google_service_account.instance_sa
+#   ]
+#   members = [
+#     "serviceAccount:${google_service_account.instance_sa.email}"
+#   ]
+# }
 
 resource "google_compute_instance" "testing_vm" {
   name         = var.vm_name
